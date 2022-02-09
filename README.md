@@ -1,5 +1,5 @@
 # mensa-cli
-A CLI which fetches the current meals available at ETHZ mensas
+A CLI which fetches the current meals available at ETHZ / UZH canteens
 
 ## Installation
 
@@ -9,20 +9,13 @@ go install github.com/lukasmoellerch/mensa-cli
 ```
 
 ## Usage
-```
-A CLI tool which fetches the list of meals for a given date
 
-Usage:
-  mensa-cli [command]
+`mensa-cli` supports the concept of groups: a group is a collection of canteens. The default which the `mensa-cli meals` command chooses is the group `default`. You can add groups by using the `mensa-cli group add` command, it will open an editor where you can select a list of canteens to add to the group.
 
-Available Commands:
-  completion  Generate the autocompletion script for the specified shell
-  get         Fetches the list of meals for a given date
-  help        Help about any command
+The main command `mensa-cli meals` fetches the list of meals for a given date. It can be used in two ways:
+- `mensa-cli meals --group [group]`: fetches the list of meals for the given group
+- `mensa-cli meals --filter [filter]`: fetches the list of meals from the canteens which match the given filter.
 
-Flags:
-      --config string   config file (default is $HOME/.mensa-cli.yaml)
-  -h, --help            help for mensa-cli
+The daytime (dinner / lunch) is chosen automatically, but can be overridden by using the `--daytime` flag or using the shorthand versions `--dinner` or `--lunch`.
 
-Use "mensa-cli [command] --help" for more information about a command.
-
+Check out the documentation located at [docs/mensa-cli.md](docs/mensa-cli.md) for more information.

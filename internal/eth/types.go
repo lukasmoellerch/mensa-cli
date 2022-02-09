@@ -1,4 +1,4 @@
-package zuerichmensa
+package eth
 
 type MensaMenuResponse struct {
 	ID      int    `json:"id"`

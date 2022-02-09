@@ -1,0 +1,19 @@
+syntax = "proto3";
+
+package lukasmoeller.mensacli.storage;
+
+option go_package = "github.com/lukasmoellerch/mensa-cli/internal/protobuf/storage";
+
+import "google/protobuf/timestamp.proto";
+
+message Root {
+  repeated CanteenData canteens = 1;
+  map<string, google.protobuf.Timestamp> last_update = 2;
+}
+
+message CanteenData {
+	string id = 1;
+	map<string, string> label = 2;
+	map<string, string> meta = 3;
+	string provider = 4;
+}
