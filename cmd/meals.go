@@ -40,10 +40,10 @@ If the filter is empty, all facilities are fetched. The filter is matched agains
 		if mealsGroupFlag != "" && mealsFilterFlag != "" {
 			return fmt.Errorf("cannot use both --group and --filter")
 		}
-		if mealsDinnerFlag && mealsDaytimeFlag == "" {
+		if mealsDinnerFlag && mealsDaytimeFlag != "" {
 			return fmt.Errorf("cannot use both --dinner and --daytime")
 		}
-		if mealsLunchFlag && mealsDaytimeFlag == "" {
+		if mealsLunchFlag && mealsDaytimeFlag != "" {
 			return fmt.Errorf("cannot use both --lunch and --daytime")
 		}
 		if mealsLunchFlag && mealsDinnerFlag {
