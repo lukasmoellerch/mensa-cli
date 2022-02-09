@@ -2,3 +2,5 @@
 mensacli
 *.prof
 .vscode
+
+dist/
