@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io"
 
+	"github.com/charmbracelet/bubbles/key"
 	"github.com/charmbracelet/bubbles/list"
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/charmbracelet/lipgloss"
@@ -169,6 +170,16 @@ func startGroupEditor(ctx context.Context, store *base.Store, initialRefs []cant
 	l.Styles.Title = titleStyle
 	l.Styles.PaginationStyle = paginationStyle
 	l.Styles.HelpStyle = helpStyle
+	bdindings := []key.Binding{
+		key.NewBinding(key.WithHelp("␣", "select/deselect")),
+		key.NewBinding(key.WithHelp("↩", "confirm changes")),
+	}
+	l.AdditionalShortHelpKeys = func() []key.Binding {
+		return bdindings
+	}
+	l.AdditionalFullHelpKeys = func() []key.Binding {
+		return bdindings
+	}
 
 	aborted := false
 	quit := false
