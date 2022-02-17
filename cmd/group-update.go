@@ -24,7 +24,7 @@ var groupUpdateCmd = &cobra.Command{
 
 		store, err := base.NewStore(storageDirectory)
 		if err != nil {
-			panic(err)
+			return err
 		}
 		if err := syncStore(ctx, store); err != nil {
 			return err

@@ -96,11 +96,11 @@ func (p *Provider) FetchCanteens(ctx context.Context, lang string) ([]base.Cante
 
 	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
-		panic(err)
+		return nil, err
 	}
 	res, err := http.DefaultClient.Do(req)
 	if err != nil {
-		panic(err)
+		return nil, err
 	}
 	defer res.Body.Close()
 	if res.StatusCode != 200 {
@@ -109,7 +109,7 @@ func (p *Provider) FetchCanteens(ctx context.Context, lang string) ([]base.Cante
 
 	doc, err := goquery.NewDocumentFromReader(res.Body)
 	if err != nil {
-		panic(err)
+		return nil, err
 	}
 
 	list := doc.Find("ul[role=navigation] > li > ul > li > a")
@@ -197,11 +197,11 @@ func fetchMenuUzh(ctx context.Context, id string, slug string, lang string, week
 	url := fmt.Sprintf("http://www.mensa.uzh.ch/%s/menueplaene/%s/%s.html", lang, slug, weekday)
 	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
-		panic(err)
+		return base.CanteenMenu{}, err
 	}
 	res, err := http.DefaultClient.Do(req)
 	if err != nil {
-		panic(err)
+		return base.CanteenMenu{}, err
 	}
 	defer res.Body.Close()
 	if res.StatusCode != 200 {
@@ -210,12 +210,12 @@ func fetchMenuUzh(ctx context.Context, id string, slug string, lang string, week
 
 	doc, err := goquery.NewDocumentFromReader(res.Body)
 	if err != nil {
-		panic(err)
+		return base.CanteenMenu{}, err
 	}
 
 	divs := doc.Find(".newslist-description > div")
 	if divs.Length() != 1 {
-		panic("no div")
+		return base.CanteenMenu{}, fmt.Errorf("invalid number of divs: %d", divs.Length())
 	}
 
 	meals := []base.Meal{}
@@ -266,7 +266,8 @@ func fetchMenuUzh(ctx context.Context, id string, slug string, lang string, week
 			// Split by | - separating the name and the price
 			parts := strings.Split(s.Text(), " | ")
 			if len(parts) != 2 {
-				panic("invalid h3 tag")
+				loopErr = fmt.Errorf("invalid label: %s", s.Text())
+				return false
 			}
 			label = parts[0]
 			price := parts[1]
