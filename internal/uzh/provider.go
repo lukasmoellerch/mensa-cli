@@ -74,11 +74,11 @@ func (p *Provider) FetchMenus(ctx context.Context, caanteens []base.CanteenRef, 
 					return nil
 				}
 			} else {
-				return fmt.Errorf("invalid daytime: %s", daytime)
+				return nil
 			}
 			menu, err := fetchMenuUzh(ctx, ref.ID, slug, lang, strWeekday)
 			if err != nil {
-				return err
+				return nil
 			}
 			menus[i] = menu
 			return nil
