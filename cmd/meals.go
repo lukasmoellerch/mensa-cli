@@ -19,6 +19,7 @@ var mealsFilterFlag string
 var mealsGroupFlag string
 var mealsDinnerFlag bool
 var mealsLunchFlag bool
+var mealsAllFlag bool
 var mealsTomorrowFlag bool
 
 // mealsCmd represents the get command
@@ -40,6 +41,13 @@ If the filter is empty, all facilities are fetched. The filter is matched agains
 		if mealsGroupFlag != "" && mealsFilterFlag != "" {
 			return fmt.Errorf("cannot use both --group and --filter")
 		}
+		if mealsGroupFlag != "" && mealsAllFlag {
+			return fmt.Errorf("cannot use both --group and --all")
+		}
+		if mealsFilterFlag != "" && mealsAllFlag {
+			return fmt.Errorf("cannot use both --filter and --all")
+		}
+
 		if mealsDinnerFlag && mealsDaytimeFlag != "" {
 			return fmt.Errorf("cannot use both --dinner and --daytime")
 		}
@@ -88,7 +96,7 @@ If the filter is empty, all facilities are fetched. The filter is matched agains
 		}
 
 		filtered := []*storage.CanteenData{}
-		if mealsFilterFlag != "" {
+		if mealsFilterFlag != "" || mealsAllFlag {
 			filtered, err = store.Filter(ctx, langFlag, mealsFilterFlag)
 			if err != nil {
 				return err
@@ -205,12 +213,16 @@ func renderResult(results map[string]base.CanteenMenu, canteenLabels map[string]
 		if !ok {
 			label = result.Canteen
 		}
+
 		s += fmt.Sprintf("\n%s\n\n", canteenNameStyle.Render(label))
+
 		for i, meal := range result.Meals {
 			if i != 0 {
 				s += "\n"
 			}
-			s += fmt.Sprintf("%s\n", headingStyle.Render(meal.Label))
+			if meal.Label != "" {
+				s += fmt.Sprintf("%s\n", headingStyle.Render(meal.Label))
+			}
 			for _, line := range meal.Description {
 				s += fmt.Sprintf("%s\n", descriptionStyle.Render(strings.TrimSpace(line)))
 			}
@@ -237,5 +249,6 @@ func init() {
 	mealsCmd.Flags().StringVarP(&mealsGroupFlag, "group", "g", "", "Group to fetch canteens from")
 	mealsCmd.Flags().BoolVarP(&mealsDinnerFlag, "dinner", "i", false, "Fetch dinner meals")
 	mealsCmd.Flags().BoolVarP(&mealsLunchFlag, "lunch", "l", false, "Fetch lunch meals")
+	mealsCmd.Flags().BoolVarP(&mealsAllFlag, "all", "a", false, "Fetch meals for all canteens")
 	mealsCmd.Flags().BoolVarP(&mealsTomorrowFlag, "tomorrow", "m", false, "Fetch tomorrow's meals")
 }
