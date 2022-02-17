@@ -32,7 +32,7 @@ This command will open an editor to allow you to add the group's caanteens.`,
 
 		store, err := base.NewStore(storageDirectory)
 		if err != nil {
-			panic(err)
+			return err
 		}
 		if err := syncStore(ctx, store); err != nil {
 			return err
