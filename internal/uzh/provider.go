@@ -190,6 +190,10 @@ func (p *Provider) FetchCanteens(ctx context.Context, lang string) ([]base.Cante
 	}
 
 	result := make([]base.CanteenMetadata, 0, len(canteenMap))
+	for _, meta := range canteenMap {
+		result = append(result, meta)
+	}
+
 	return result, nil
 }
 
